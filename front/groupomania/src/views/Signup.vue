@@ -10,7 +10,6 @@
 </template>
 
 <script>
-  // @ is an alias to /src
   import SignUpForm from '@/components/SignUpForm.vue';
 
   export default {
@@ -25,5 +24,7 @@
   .signup {
     background-color: #ffd7d7;
     padding: 20px;
+    border-radius: 20px;
+    width: 80%;
   }
 </style>

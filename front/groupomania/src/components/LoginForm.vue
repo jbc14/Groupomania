@@ -1,6 +1,6 @@
 <template>
   <div class="login__form">
-    <input type="text" placeholder="Email" />
+    <input type="email" placeholder="Email" />
     <input type="text" placeholder="Mot de passe" />
     <button>Se connecter</button>
   </div>
@@ -40,6 +40,7 @@
     height: 25px;
     border-radius: 15px;
     border-style: none;
+    margin: 20px auto;
   }
 
   button:hover {

@@ -2,7 +2,7 @@
   <div class="signup__form">
     <input type="text" placeholder="Prénom" />
     <input type="text" placeholder="Nom" />
-    <input type="text" placeholder="Email" />
+    <input type="email" placeholder="Email" />
     <input type="text" placeholder="Mot de passe" />
     <button>Se connecter</button>
   </div>
