@@ -1,10 +1,5 @@
 <template>
   <img id="logo" alt="Groupomania Logo" src="./assets/logos/logo.png" />
-
-  <div id="nav">
-    <router-link to="/">Se connecter</router-link> |
-    <router-link to="/signup">Créer un compte</router-link>
-  </div>
   <router-view />
 </template>
 

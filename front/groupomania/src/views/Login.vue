@@ -1,5 +1,10 @@
 <template>
   <div class="login">
+    <div id="nav">
+      <router-link to="/">Se connecter</router-link> |
+      <router-link to="/signup">Créer un compte</router-link>
+    </div>
+    <router-view />
     <LoginForm />
   </div>
 </template>
@@ -20,6 +25,5 @@
   .login {
     background-color: #ffd7d7;
     padding: 20px;
-  
   }
 </style>

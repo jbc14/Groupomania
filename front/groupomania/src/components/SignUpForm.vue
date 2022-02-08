@@ -1,5 +1,7 @@
 <template>
-  <div class="login__form">
+  <div class="signup__form">
+    <input type="text" placeholder="Prénom" />
+    <input type="text" placeholder="Nom" />
     <input type="text" placeholder="Email" />
     <input type="text" placeholder="Mot de passe" />
     <button>Se connecter</button>
@@ -8,12 +10,12 @@
 
 <script>
   export default {
-    name: 'LoginForm',
+    name: 'SignUpForm',
   };
 </script>
 
 <style scoped>
-  .login__form {
+  .signup__form {
     background-color: #ffd7d7;
     display: flex;
     flex-direction: column;
@@ -26,10 +28,6 @@
     width: 200px;
     height: 30px;
     border-radius: 10px;
-    border-style: none;
-  }
-
-  input:focus {
     border-style: none;
   }
 
