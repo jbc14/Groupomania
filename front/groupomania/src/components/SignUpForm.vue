@@ -31,6 +31,10 @@
     border-style: none;
   }
 
+  input:focus {
+    border-style: none;
+  }
+
   button {
     background-color: #fd2d01;
     color: white;
@@ -38,6 +42,7 @@
     height: 25px;
     border-radius: 15px;
     border-style: none;
+    margin: 20px auto;
   }
 
   button:hover {

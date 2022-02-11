@@ -4,7 +4,6 @@
       <router-link to="/">Se connecter</router-link> |
       <router-link to="/signup">Créer un compte</router-link>
     </div>
-    <router-view />
     <LoginForm />
   </div>
 </template>

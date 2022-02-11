@@ -1,6 +1,8 @@
 <template>
-  <img id="logo" alt="Groupomania Logo" src="./assets/logos/logo.png" />
-  <router-view />
+  <div>
+    <img id="logo" alt="Groupomania Logo" src="./assets/logos/logo.png" />
+    <router-view />
+  </div>
 </template>
 
 <style>
@@ -15,7 +17,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  
   }
 
   #logo {

@@ -1,7 +1,18 @@
 const express = require("express");
 const app = express();
-
 app.use(express.json());
+const mongoose = require("mongoose");
+const postsRoutes = require("./routes/posts");
+const userRoutes = require("./routes/user");
+const path = require("path");
+
+mongoose
+  .connect(
+    "mongodb+srv://jbc14:tByuWRrxL7Y6DCvr@cluster0.lni6s.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    { useNewUrlParser: true, useUnifiedTopology: true }
+  )
+  .then(() => console.log("Connexion à MongoDB réussie !"))
+  .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -16,10 +27,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post("/api/auth");
-
-app.use((req, res) => {
-  res.json({ message: "Votre requête a bien été reçue" });
-});
+app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/api/auth", userRoutes);
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;

@@ -31,7 +31,7 @@
       <div class="timeline-post">
         <div class="timeline-post-content">
           <img src="../assets/random_img2.jpg" />
-          <p>Mon nouveau post incroyable !</p>
+          <p>Mon autre post incroyable !</p>
         </div>
         <div class="timeline-post-info">
           <div class="likes">
@@ -39,7 +39,7 @@
             <img src="../assets/dislike.png" alt="" srcset="" />
           </div>
           <div class="post-user-info">
-            <p>Posté par Jb le 05/02/2022</p>
+            <p>Posté par Jb le 06/02/2022</p>
             <img
               class="timeline-post-info-pp"
               src="../assets/random_user.webp"
@@ -106,7 +106,7 @@
   .timeline-post {
     width: 100%;
     height: auto;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
   }
 
   .timeline-post-content {
@@ -135,6 +135,7 @@
     border-radius: 50px;
     border: solid black 1px;
     margin: auto;
+    cursor: pointer;
   }
 
   .post-user-info {
@@ -154,5 +155,6 @@
     margin-right: 10px;
     margin-left: 10px;
     margin-top: 8px;
+    cursor: pointer;
   }
 </style>
