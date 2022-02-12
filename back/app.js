@@ -7,13 +7,6 @@ const userRoutes = require('./routes/user');
 const path = require('path');
 
 
-mongoose
-  .connect(
-    'mongodb+srv://jbc14:tByuWRrxL7Y6DCvr@cluster0.lni6s.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
-  .then(() => console.log('Connexion à MongoDB réussie !'))
-  .catch(() => console.log('Connexion à MongoDB échouée !'));
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

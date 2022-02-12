@@ -1,17 +1,18 @@
-const mongoose = require("mongoose");
-
-const postSchema = mongoose.Schema({
-  userId: { type: String, required: true },
-  name: { type: String, required: true },
-  manufacturer: { type: String, required: true },
-  description: { type: String, required: true },
-  mainPepper: { type: String, required: true },
-  imageUrl: { type: String, required: true },
-  heat: { type: Number, required: true },
-  likes: { type: Number},
-  dislikes: { type: Number},
-  usersLiked: {},
-  usersDisliked: {},
+const Sequelize = require('sequelize');
+const sequelize = require('../config/database');
+const Post = sequelize.define('post', {
+  _id: {
+    type: Sequelize.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  text: { type: Sequelize.STRING, allowNull: false },
+  imageUrl: { type: Sequelize.STRING, allowNull: true },
+  userId: { type: Sequelize.INTEGER, allowNull: false },
+  createdAt: Sequelize.DATE,
+  updatedAt: Sequelize.DATE,
 });
 
-module.exports = mongoose.model("Post", postSchema);
+
+module.exports = Post;
