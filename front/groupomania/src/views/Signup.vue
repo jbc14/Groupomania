@@ -26,5 +26,7 @@
     padding: 20px;
     border-radius: 20px;
     width: 80%;
+    margin-left: auto;
+    margin-right: auto;
   }
 </style>

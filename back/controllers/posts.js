@@ -25,60 +25,74 @@ exports.createPost = (req, res, next) => {
 };
 
 exports.updatePost = (req, res, next) => {
-  if (req.file) {
-    Post.findOne({ _id: req.params.id }).then((post) => {
-      const filename = post.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, (err) => {
-        if (err) throw err;
-        console.log('Image was deleted');
-      });
-    });
-  }
-  const postObject = req.file
-    ? {
-        ...JSON.parse(req.body.post),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${
-          req.file.filename
-        }`,
-      }
-    : { ...req.body };
-
-  Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-    .then(() => res.status(200).json({ message: 'Post modifié !' }))
-    .catch((error) => res.status(400).json({ error }));
+  Post.update(
+    {
+      text: req.body.text,
+      imageUrl: req.body.imageUrl,
+      userId: req.body.userId,
+    },
+    { returning: true, where: { _id: req.params.id } }
+  ).then(
+    Post.findOne({ where: { _id: req.params.id } })
+      .then((post) => res.status(200).json({ message: 'Post modifié', post }))
+      .catch((error) => res.status(404).json({ error }))
+  );
+  // if (req.file) {
+  //   Post.findOne({ _id: req.params.id }).then((post) => {
+  //     const filename = post.imageUrl.split('/images/')[1];
+  //     fs.unlink(`images/${filename}`, (err) => {
+  //       if (err) throw err;
+  //       console.log('Image was deleted');
+  //     });
+  //   });
+  // }
+  // const postObject = req.file
+  //   ? {
+  //       ...JSON.parse(req.body.post),
+  //       imageUrl: `${req.protocol}://${req.get('host')}/images/${
+  //         req.file.filename
+  //       }`,
+  //     }
+  //   : { ...req.body };
 };
 
 exports.deletePost = (req, res, next) => {
-  Post.findOne({ _id: req.params.id })
+  Post.findOne({ where: { _id: req.params.id } })
     .then((post) => {
-      const filename = post.imageUrl.split('/images/')[1];
-      fs.unlink(`images/${filename}`, () => {
-        Post.findOne({ _id: req.params.id }).then((post) => {
-          if (!post) {
-            res.status(404).json({
-              error: new Error('Post inexistant'),
-            });
-          }
-          if (post.userId !== req.auth.userId) {
-            res.status(400).json({
-              error: new Error('Unauthorized request!'),
-            });
-          }
-          Post.deleteOne({ _id: req.params.id })
-            .then(() => {
-              res.status(200).json({
-                message: 'Post supprimé!',
-              });
-            })
-            .catch((error) => {
-              res.status(400).json({
-                error: error,
-              });
-            });
-        });
-      });
+      post.destroy();
     })
-    .catch((error) => res.status(500).json({ error }));
+    .then(() => res.status(200).json({ message: 'Post Supprimé !' }))
+    .catch((error) => res.status(404).json({ error }));
+  // Post.findOne({ _id: req.params.id })
+  //   .then((post) => {
+  //     const filename = post.imageUrl.split('/images/')[1];
+  //     fs.unlink(`images/${filename}`, () => {
+  //       Post.findOne({ _id: req.params.id }).then((post) => {
+  //         if (!post) {
+  //           res.status(404).json({
+  //             error: new Error('Post inexistant'),
+  //           });
+  //         }
+  //         if (post.userId !== req.auth.userId) {
+  //           res.status(400).json({
+  //             error: new Error('Unauthorized request!'),
+  //           });
+  //         }
+  //         Post.deleteOne({ _id: req.params.id })
+  //           .then(() => {
+  //             res.status(200).json({
+  //               message: 'Post supprimé!',
+  //             });
+  //           })
+  //           .catch((error) => {
+  //             res.status(400).json({
+  //               error: error,
+  //             });
+  //           });
+  //       });
+  //     });
+  //   })
+  //   .catch((error) => res.status(500).json({ error }));
 };
 
 exports.getOnePost = (req, res) => {

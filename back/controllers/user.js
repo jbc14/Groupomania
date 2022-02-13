@@ -1,24 +1,37 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const Post = require('../models/Post');
 
 exports.signup = (req, res, next) => {
-  bcrypt
-    .hash(req.body.password, 10)
-    .then((hash) => {
-      const user = User.create({
-        pseudo: req.body.pseudo,
-        email: req.body.email,
-        password: hash,
-      })
-        .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
-        .catch((error) => res.status(400).json({ error }));
+  User.findOne({
+    where: { email: req.body.email },
+  })
+    .then((user) => {
+      if (user) {
+        res.status(400).json({ message: 'Utilisateur déjà enregistré' });
+      } else {
+        bcrypt
+          .hash(req.body.password, 10)
+          .then((hash) => {
+            const user = User.create({
+              pseudo: req.body.pseudo,
+              email: req.body.email,
+              password: hash,
+            })
+              .then((user) =>
+                res.status(201).json({ message: 'Utilisateur créé !', user })
+              )
+              .catch((error) => res.status(400).json({ error }));
+          })
+          .catch((error) => res.status(500).json({ error }));
+      }
     })
     .catch((error) => res.status(500).json({ error }));
 };
 
 exports.login = (req, res, next) => {
-  User.findAll({
+  User.findOne({
     where: { email: req.body.email },
   })
     .then((user) => {

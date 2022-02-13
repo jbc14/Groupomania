@@ -13,10 +13,6 @@
     text-align: center;
     color: #2c3e50;
     background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
   }
 
   #logo {
@@ -25,6 +21,7 @@
     max-width: 80%;
     margin-bottom: 20px;
   }
+
 
   #nav {
     padding: 30px;
