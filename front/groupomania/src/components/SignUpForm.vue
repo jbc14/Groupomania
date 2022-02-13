@@ -1,15 +1,47 @@
 <template>
   <div class="signup__form">
-    <input type="text" placeholder="Pseudo" />
-    <input type="email" placeholder="Email" />
-    <input type="text" placeholder="Mot de passe" />
-    <button>Se connecter</button>
+    <input v-model="pseudo" type="text" placeholder="Pseudo" />
+    <input v-model="email" type="email" placeholder="Email" />
+    <input v-model="password" type="text" placeholder="Mot de passe" />
+    <button @click="signUp()">Se connecter</button>
   </div>
 </template>
 
 <script>
   export default {
     name: 'SignUpForm',
+    data: function () {
+      return {
+        pseudo: '',
+        email: '',
+        password: '',
+      };
+    },
+    methods: {
+      signUp: function () {
+        fetch('http://localhost:3000/api/auth/signup', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            pseudo: this.pseudo,
+            email: this.email,
+            password: this.password,
+          }),
+        })
+          .then((res) => {
+            return res.json();
+          })
+          .then(() => {
+            this.$router.push('/posts');
+          })
+          .catch((error) => {
+            error;
+          });
+      },
+    },
   };
 </script>
 
@@ -42,6 +74,7 @@
     border-radius: 15px;
     border-style: none;
     margin: 20px auto;
+    cursor: pointer;
   }
 
   button:hover {
