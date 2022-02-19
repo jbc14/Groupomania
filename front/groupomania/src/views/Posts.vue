@@ -76,26 +76,6 @@
         console.log(document.getElementById('file').files[0]);
       },
       sendNewPost() {
-        // const formData = new FormData();
-        // const file = document.getElementById('file').files[0];
-        // const userId = localStorage.getItem('userId');
-
-        // formData.append('text', this.text);
-        // formData.append('imageUrl', file);
-        // formData.append('userId', userId);
-
-        // fetch('https://localhost:3000/api/posts', {
-        //   method: 'POST',
-
-        //   body: formData,
-        // })
-        //   .then((res) => res.json())
-        //   .then(() => {
-        //     console.log('Post enregistré');
-        //     this.getAllPosts();
-        //   })
-        //   .catch((err) => console.log(err))};
-
         fetch('http://localhost:3000/api/posts', {
           method: 'POST',
           headers: {
@@ -115,10 +95,30 @@
           .catch((error) => {
             error;
           });
+
+        // const formData = new FormData();
+        // const file = document.getElementById('file').files[0];
+        // const userId = localStorage.getItem('userId');
+
+        // formData.append('text', this.text);
+        // formData.append('imageUrl', file);
+        // formData.append('userId', userId);
+
+        // fetch('https://localhost:3000/api/posts', {
+        //   method: 'POST',
+
+        //   body: formData,
+        // })
+        //   .then((res) => res.json())
+        //   .then(() => {
+        //     console.log('Post enregistré');
+        //     this.getAllPosts();
+        //   })
+        //   .catch((err) => console.log(err))};
       },
-      beforeMount() {
-        this.getAllPosts();
-      },
+    },
+    beforeMount() {
+      this.getAllPosts();
     },
   };
 </script>

@@ -48,7 +48,7 @@
       },
       deletePost() {
         const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/15`, {
+        fetch(`http://localhost:3000/api/posts/19`, {
           method: 'DELETE',
           headers: {
             Accept: 'application/json',
@@ -66,7 +66,7 @@
       },
       updatePost() {
         const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/16`, {
+        fetch(`http://localhost:3000/api/posts/20`, {
           method: 'PUT',
           headers: {
             Accept: 'application/json',
@@ -74,7 +74,7 @@
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            text: 'encore un nouveau texte',
+            text: 'bonjour2',
             imageUrl: 'encore une nouvelle url',
           }),
         })
