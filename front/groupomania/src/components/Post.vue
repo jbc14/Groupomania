@@ -1,17 +1,23 @@
 <template>
-  <div class="timeline-post">
-    <div class="timeline-post-content">
-      <img src="../assets/random_img2.jpg" />
-      <p>Mon autre post incroyable !</p>
-    </div>
-    <div class="timeline-post-info">
-      <div class="likes">
-        <img src="../assets/like.png" alt="" srcset="" />
-        <img src="../assets/dislike.png" alt="" srcset="" />
+  <div>
+    <div :data-id="post._id" class="timeline-post">
+      <div class="timeline-post-content">
+        <img :src="post.imageUrl" />
+        <p>{{ post.text }}</p>
       </div>
-      <div class="post-user-info">
-        <p>Posté par Jb le 06/02/2022</p>
-        <img class="timeline-post-info-pp" src="../assets/random_user.webp" />
+      <div class="timeline-post-info">
+        <div class="likes">
+          <img src="../assets/like.png" alt="" srcset="" />
+          <img src="../assets/dislike.png" alt="" srcset="" />
+        </div>
+        <button @click="updatePost" id="update-post">Modifier</button>
+        <button v-if="isUserValid()" @click="deletePost" class="delete-post-btn">
+          Supprimer
+        </button>
+        <div class="post-user-info">
+          <p>Posté par {{ post.userId }}</p>
+          <img class="timeline-post-info-pp" src="../assets/random_user.webp" />
+        </div>
       </div>
     </div>
   </div>
@@ -19,13 +25,37 @@
 
 <script>
   export default {
-    name: 'SignUpForm',
-    data: function () {
+    name: 'Post',
+    data() {
       return {
-        pseudo: '',
-        email: '',
-        password: '',
+        post: {},
       };
+    },
+    methods: {
+      deletePost() {
+        fetch(`http://localhost:3000/api/posts/${data_id}`, {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((res) => {
+            res.json();
+            this.getAllPosts();
+          })
+          .catch((error) => {
+            error;
+          });
+      },
+      isUserValid() {
+        const userId = localStorage.getItem('userId');
+        if (userId == post.userId) {
+          return true;
+        } else {
+          return false;
+        }
+      },
     },
   };
 </script>

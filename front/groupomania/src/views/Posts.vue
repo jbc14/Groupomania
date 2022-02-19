@@ -23,7 +23,7 @@
       </div>
     </div>
     <div class="timeline">
-      <Post />
+      <Post v-for="post in allPosts" :key="post" :post="post" />
     </div>
   </div>
 </template>
@@ -37,7 +37,8 @@
       return {
         text: '',
         imageUrl: '',
-        userId: 16,
+        userId: localStorage.getItem('userId'),
+        allPosts: [],
       };
     },
     components: {
@@ -45,6 +46,8 @@
     },
     methods: {
       logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
         this.$router.push('/');
       },
       getAllPosts() {
@@ -55,8 +58,9 @@
             'Content-Type': 'application/json',
           },
         })
-          .then((res) => {
-            return res.json();
+          .then((res) => res.json())
+          .then((posts) => {
+            this.allPosts = posts;
           })
           .catch((error) => {
             error;
@@ -71,17 +75,21 @@
           },
           body: JSON.stringify({
             text: this.text,
-            imageUrl: `https://pngimg.com/uploads/batman/batman_PNG6.png`,
+            imageUrl: '../assets/random_img.jpg',
             userId: this.userId,
           }),
         })
           .then((res) => {
-            return res.json();
+            res.json();
+            this.getAllPosts();
           })
           .catch((error) => {
             error;
           });
       },
+    },
+    beforeMount() {
+      this.getAllPosts();
     },
   };
 </script>
@@ -153,7 +161,6 @@
     border-radius: 15px;
     border-style: none;
     cursor: pointer;
-    font-family: Avenir, Helvetica, Arial, sans-serif;
   }
 
   .add-image-btn {

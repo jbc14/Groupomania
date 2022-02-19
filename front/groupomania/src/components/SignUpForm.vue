@@ -10,7 +10,7 @@
 <script>
   export default {
     name: 'SignUpForm',
-    data: function () {
+    data() {
       return {
         pseudo: '',
         email: '',
@@ -33,6 +33,11 @@
         })
           .then((res) => {
             return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+            localStorage.setItem('userId', `${data.userId}`);
+            localStorage.setItem('token', `${data.token}`);
           })
           .then(() => {
             this.$router.push('/posts');

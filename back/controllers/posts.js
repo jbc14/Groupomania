@@ -1,4 +1,6 @@
 const Post = require('../models/Post');
+const User = require('../models/User');
+
 const fs = require('fs');
 
 exports.createPost = (req, res, next) => {
@@ -9,7 +11,7 @@ exports.createPost = (req, res, next) => {
   const post = Post.create({
     text: req.body.text,
     imageUrl: req.body.imageUrl,
-    userId: req.body.userId,
+    createurId: req.body.userId,
     // likes: 0,
     // dislikes: 0,
     // usersLiked: [],
@@ -102,7 +104,15 @@ exports.getOnePost = (req, res) => {
 };
 
 exports.getAllPosts = (req, res) => {
-  Post.findAll()
+  Post.findAll({
+    include: [
+      {
+        model: User,
+        as: 'createur',
+        attributes: ['pseudo'],
+      },
+    ],
+  })
     .then((posts) => res.status(200).json(posts))
     .catch((error) => res.status(400).json({ error }));
 };

@@ -8,6 +8,7 @@ const sequelize = new Sequelize('groupomania', 'root', 'jbc143318', {
 try {
   sequelize.authenticate();
   console.log('Connexion à la base de données réussie !');
+  sequelize.sync();
 } catch (error) {
   console.error('Impossible de se connecter à la base de données:', error);
 }

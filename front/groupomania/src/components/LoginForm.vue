@@ -28,8 +28,11 @@
             password: this.password,
           }),
         })
-          .then((res) => {
-            return res.json();
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data)
+            localStorage.setItem('userId', `${data.userId}`);
+            localStorage.setItem('token', `${data.token}`);
           })
           .then(() => {
             this.$router.push('/posts');
