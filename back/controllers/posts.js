@@ -4,41 +4,59 @@ const User = require('../models/User');
 const fs = require('fs');
 
 exports.createPost = (req, res, next) => {
-  // const postObject = JSON.parse(req.body.post);
-
-  // delete postObject._id;
-
   const post = Post.create({
     text: req.body.text,
     imageUrl: req.body.imageUrl,
     createurId: req.body.userId,
-    // likes: 0,
-    // dislikes: 0,
-    // usersLiked: [],
-    // // usersDisliked: [],
-    // imageUrl: `${req.protocol}://${req.get('host')}/images/${
-    //   req.file.filename
-    // }`,
   })
-    // post
-    //   .save()
     .then(() => res.status(201).json({ message: 'Post enregistré !' }))
     .catch((error) => res.status(400).json({ error }));
+
+  // const postObject = JSON.parse(req.body);
+
+  // // delete postObject._id;
+
+  // const post = Post.create({
+  //   ...postObject,
+  //   imageUrl: `${req.protocol}://${req.get('host')}/images/${
+  //     req.file.filename
+  //   }`,
+  // })
+  //   .then(() => res.status(201).json({ message: 'Post enregistré !' }))
+  //   .catch((error) => res.status(400).json({ error }));
 };
 
 exports.updatePost = (req, res, next) => {
-  Post.update(
-    {
-      text: req.body.text,
-      imageUrl: req.body.imageUrl,
-      userId: req.body.userId,
-    },
-    { returning: true, where: { _id: req.params.id } }
-  ).then(
-    Post.findOne({ where: { _id: req.params.id } })
-      .then((post) => res.status(200).json({ message: 'Post modifié', post }))
-      .catch((error) => res.status(404).json({ error }))
-  );
+  Post.findOne({ where: { _id: req.params.id } })
+    .then((post) => {
+      if (!post) {
+        res.status(404).json({
+          message: 'Post inexistant',
+        });
+      }
+      if (post.createurId !== req.auth.userId) {
+        res.status(400).json({
+          message: 'Non autorisé',
+        });
+      }
+      if (post.createurId == req.auth.userId) {
+        Post.update(
+          {
+            text: req.body.text,
+            imageUrl: req.body.imageUrl,
+          },
+          { returning: true, where: { _id: req.params.id } }
+        ).then(
+          Post.findOne({ where: { _id: req.params.id } })
+            .then((post) =>
+              res.status(200).json({ message: 'Post modifié', post })
+            )
+            .catch((error) => res.status(404).json({ error }))
+        );
+      }
+    })
+    .catch((error) => res.status(500).json({ error }));
+
   // if (req.file) {
   //   Post.findOne({ _id: req.params.id }).then((post) => {
   //     const filename = post.imageUrl.split('/images/')[1];
@@ -61,10 +79,39 @@ exports.updatePost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
   Post.findOne({ where: { _id: req.params.id } })
     .then((post) => {
-      post.destroy();
+      if (!post) {
+        res.status(404).json({
+          message: 'Post inexistant',
+        });
+      }
+      if (post.createurId !== req.auth.userId) {
+        res.status(400).json({
+          message: 'Non autorisé',
+        });
+      }
+      if (post.createurId == req.auth.userId) {
+        Post.destroy({ where: { _id: req.params.id } })
+          .then(() => {
+            res.status(200).json({
+              message: 'Post supprimé!',
+            });
+          })
+          .catch((error) => {
+            res.status(400).json({
+              error,
+            });
+          });
+      }
     })
-    .then(() => res.status(200).json({ message: 'Post Supprimé !' }))
-    .catch((error) => res.status(404).json({ error }));
+    .catch((error) => res.status(500).json({ error }));
+
+  // Post.findOne({ where: { _id: req.params.id } })
+  //   .then((post) => {
+  //     post.destroy();
+  //   })
+  //   .then(() => res.status(200).json({ message: 'Post Supprimé !' }))
+  //   .catch((error) => res.status(404).json({ error }));
+
   // Post.findOne({ _id: req.params.id })
   //   .then((post) => {
   //     const filename = post.imageUrl.split('/images/')[1];

@@ -11,9 +11,7 @@
           <img src="../assets/dislike.png" alt="" srcset="" />
         </div>
         <button @click="updatePost" id="update-post">Modifier</button>
-        <button v-if="isUserValid()" @click="deletePost" class="delete-post-btn">
-          Supprimer
-        </button>
+        <button @click="deletePost" class="delete-post-btn">Supprimer</button>
         <div class="post-user-info">
           <p>Posté par {{ post.userId }}</p>
           <img class="timeline-post-info-pp" src="../assets/random_user.webp" />
@@ -32,29 +30,61 @@
       };
     },
     methods: {
-      deletePost() {
-        fetch(`http://localhost:3000/api/posts/${data_id}`, {
-          method: 'DELETE',
+      getAllPosts() {
+        fetch('http://localhost:3000/api/posts', {
+          method: 'GET',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
         })
-          .then((res) => {
-            res.json();
-            this.getAllPosts();
+          .then((res) => res.json())
+          .then((posts) => {
+            this.allPosts = posts;
           })
           .catch((error) => {
             error;
           });
       },
-      isUserValid() {
-        const userId = localStorage.getItem('userId');
-        if (userId == post.userId) {
-          return true;
-        } else {
-          return false;
-        }
+      deletePost() {
+        const token = localStorage.getItem('token');
+        fetch(`http://localhost:3000/api/posts/15`, {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => {
+            res.json();
+            this.$emit('update-timeline');
+          })
+          .catch((error) => {
+            error;
+          });
+      },
+      updatePost() {
+        const token = localStorage.getItem('token');
+        fetch(`http://localhost:3000/api/posts/16`, {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            text: 'encore un nouveau texte',
+            imageUrl: 'encore une nouvelle url',
+          }),
+        })
+          .then((res) => {
+            res.json();
+            this.$emit('update-timeline');
+          })
+          .catch((error) => {
+            error;
+          });
       },
     },
   };

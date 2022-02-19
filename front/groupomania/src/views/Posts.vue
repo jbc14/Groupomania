@@ -14,16 +14,22 @@
       <div class="new-post-btns">
         <label for="file" class="label-file">Choisir une image</label>
         <input
+          @change="consoleLogFile"
           id="file"
           type="file"
           class="add-image-btn"
-          accept="image/png, image/gif, image/jpeg"
+          accept="image/png, image/gif, image/jpeg, image/jpeg"
         />
         <button @click="sendNewPost()" class="send-new-post">Poster</button>
       </div>
     </div>
     <div class="timeline">
-      <Post v-for="post in allPosts" :key="post" :post="post" />
+      <Post
+        v-for="post in allPosts"
+        :key="post"
+        :post="post"
+        @update-timeline="getAllPosts"
+      />
     </div>
   </div>
 </template>
@@ -66,7 +72,30 @@
             error;
           });
       },
+      consoleLofFile() {
+        console.log(document.getElementById('file').files[0]);
+      },
       sendNewPost() {
+        // const formData = new FormData();
+        // const file = document.getElementById('file').files[0];
+        // const userId = localStorage.getItem('userId');
+
+        // formData.append('text', this.text);
+        // formData.append('imageUrl', file);
+        // formData.append('userId', userId);
+
+        // fetch('https://localhost:3000/api/posts', {
+        //   method: 'POST',
+
+        //   body: formData,
+        // })
+        //   .then((res) => res.json())
+        //   .then(() => {
+        //     console.log('Post enregistré');
+        //     this.getAllPosts();
+        //   })
+        //   .catch((err) => console.log(err))};
+
         fetch('http://localhost:3000/api/posts', {
           method: 'POST',
           headers: {
@@ -87,9 +116,9 @@
             error;
           });
       },
-    },
-    beforeMount() {
-      this.getAllPosts();
+      beforeMount() {
+        this.getAllPosts();
+      },
     },
   };
 </script>
