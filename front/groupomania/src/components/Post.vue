@@ -1,19 +1,32 @@
 <template>
   <div>
-    <div :data-id="post._id" class="timeline-post">
+    <div class="timeline-post">
       <div class="timeline-post-content">
         <img :src="post.imageUrl" />
-        <p>{{ post.text }}</p>
+        <p v-if="!updateMode">{{ post.text }}</p>
+        <input v-else type="text" v-model="post.text" />
       </div>
       <div class="timeline-post-info">
         <div class="likes">
           <img src="../assets/like.png" alt="" srcset="" />
           <img src="../assets/dislike.png" alt="" srcset="" />
         </div>
-        <button @click="updatePost" id="update-post">Modifier</button>
-        <button @click="deletePost" class="delete-post-btn">Supprimer</button>
+        <button
+          v-if="isUserAllowed(post)"
+          @click="updatePost()"
+          id="update-post"
+        >
+          Modifier
+        </button>
+        <button
+          v-if="isUserAllowed(post)"
+          @click="deletePost(post)"
+          class="delete-post-btn"
+        >
+          Supprimer
+        </button>
         <div class="post-user-info">
-          <p>Posté par {{ post.userId }}</p>
+          <p>Posté par {{ post.createur.pseudo }}</p>
           <img class="timeline-post-info-pp" src="../assets/random_user.webp" />
         </div>
       </div>
@@ -26,29 +39,18 @@
     name: 'Post',
     data() {
       return {
-        post: {},
+        updateMode: false,
       };
     },
+    props: {
+      post: {},
+    },
     methods: {
-      getAllPosts() {
-        fetch('http://localhost:3000/api/posts', {
-          method: 'GET',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((res) => res.json())
-          .then((posts) => {
-            this.allPosts = posts;
-          })
-          .catch((error) => {
-            error;
-          });
-      },
-      deletePost() {
+      deletePost(post) {
+        this.$emit('delete', post);
+        return;
         const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/19`, {
+        fetch(`http://localhost:3000/api/posts/${post._id}`, {
           method: 'DELETE',
           headers: {
             Accept: 'application/json',
@@ -58,15 +60,17 @@
         })
           .then((res) => {
             res.json();
-            this.$emit('update-timeline');
+            this.getAllPosts();
           })
           .catch((error) => {
             error;
           });
       },
-      updatePost() {
+      updatePost(post) {
+        this.updateMode = !this.updateMode;
+        return;
         const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/20`, {
+        fetch(`http://localhost:3000/api/posts/${post._id}`, {
           method: 'PUT',
           headers: {
             Accept: 'application/json',
@@ -74,17 +78,23 @@
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
-            text: 'bonjour2',
+            text: 'NOUVEAU POST MODIFIE ENCORE UNE FOIS',
             imageUrl: 'encore une nouvelle url',
           }),
         })
           .then((res) => {
             res.json();
-            this.$emit('update-timeline');
+            this.getAllPosts();
           })
           .catch((error) => {
             error;
           });
+      },
+      isUserAllowed(post) {
+        if (post.createurId == localStorage.getItem('userId')) {
+          return true;
+        }
+        return false;
       },
     },
   };
@@ -143,6 +153,17 @@
     margin-right: 10px;
     margin-left: 10px;
     margin-top: 8px;
+    cursor: pointer;
+  }
+
+  button {
+    margin-top: 5px;
+    background-color: #fd2d01;
+    color: white;
+    width: 80px;
+    height: 25px;
+    border-radius: 15px;
+    border-style: none;
     cursor: pointer;
   }
 </style>

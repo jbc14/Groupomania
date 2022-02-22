@@ -6,24 +6,13 @@ const fs = require('fs');
 exports.createPost = (req, res, next) => {
   const post = Post.create({
     text: req.body.text,
-    imageUrl: req.body.imageUrl,
+    imageUrl: req.file
+      ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+      : undefined,
     createurId: req.body.userId,
   })
     .then(() => res.status(201).json({ message: 'Post enregistré !' }))
     .catch((error) => res.status(400).json({ error }));
-
-  // const postObject = JSON.parse(req.body);
-
-  // // delete postObject._id;
-
-  // const post = Post.create({
-  //   ...postObject,
-  //   imageUrl: `${req.protocol}://${req.get('host')}/images/${
-  //     req.file.filename
-  //   }`,
-  // })
-  //   .then(() => res.status(201).json({ message: 'Post enregistré !' }))
-  //   .catch((error) => res.status(400).json({ error }));
 };
 
 exports.updatePost = (req, res, next) => {
@@ -159,6 +148,7 @@ exports.getAllPosts = (req, res) => {
         attributes: ['pseudo'],
       },
     ],
+    order: [['createdAt', 'DESC']],
   })
     .then((posts) => res.status(200).json(posts))
     .catch((error) => res.status(400).json({ error }));
@@ -197,3 +187,7 @@ exports.like = (req, res) => {
       res.status(400).json({ error: error });
     });
 };
+
+
+// ne pas pouvoir accéder à post sans login
+//

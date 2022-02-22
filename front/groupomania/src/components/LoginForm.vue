@@ -1,7 +1,18 @@
 <template>
   <div class="login__form">
     <input v-model="email" type="email" placeholder="Email" />
-    <input v-model="password" type="text" placeholder="Mot de passe" />
+    <div class="password-container">
+      <input
+        id="password-input"
+        v-model="password"
+        type="password"
+        placeholder="Mot de passe"
+      />
+      <button @click="showPassword()" id="show-password">
+        <img id="show-password-icon" src="../assets/open_eye.png" />
+      </button>
+    </div>
+
     <button @click="logIn()">Se connecter</button>
   </div>
 </template>
@@ -16,7 +27,7 @@
       };
     },
     methods: {
-      logIn: function () {
+      logIn() {
         fetch('http://localhost:3000/api/auth/login', {
           method: 'POST',
           headers: {
@@ -30,9 +41,8 @@
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log(data)
-            localStorage.setItem('userId', `${data.userId}`);
-            localStorage.setItem('token', `${data.token}`);
+            localStorage.setItem('userId', data.userId);
+            localStorage.setItem('token', data.token);
           })
           .then(() => {
             this.$router.push('/posts');
@@ -40,6 +50,12 @@
           .catch((error) => {
             error;
           });
+      },
+      showPassword() {
+        console.log('erreur');
+        const passwordInput = document.getElementById('password-input');
+        passwordInput.type =
+          passwordInput.type === 'password' ? 'text' : 'password';
       },
     },
   };
@@ -79,5 +95,24 @@
 
   button:hover {
     filter: brightness(200%);
+  }
+
+  .password-container {
+    position: relative;
+  }
+  #show-password {
+    width: 30px;
+    display: flex;
+    align-content: center;
+    position: absolute;
+    right: -45px;
+    top: -15px;
+    border-radius: 100px;
+  }
+
+  #show-password-icon {
+    width: 20px;
+    height: 20px;
+    margin: auto;
   }
 </style>

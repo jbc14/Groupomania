@@ -4,7 +4,7 @@
       <input type="button" value="Se déconnecter" />
       <img src="../assets/logout.png" alt="" srcset="" />
     </div>
-    <div class="new-post-container">
+    <form class="new-post-container">
       <input
         placeholder="Quoi de neuf aujourd'hui ?"
         type="text"
@@ -14,21 +14,28 @@
       <div class="new-post-btns">
         <label for="file" class="label-file">Choisir une image</label>
         <input
-          @change="consoleLogFile"
           id="file"
           type="file"
           class="add-image-btn"
           accept="image/png, image/gif, image/jpeg, image/jpeg"
         />
-        <button @click="sendNewPost()" class="send-new-post">Poster</button>
+        <button
+          type="submit"
+          @click.prevent="sendNewPost()"
+          class="send-new-post"
+        >
+          Poster
+        </button>
       </div>
-    </div>
+    </form>
     <div class="timeline">
       <Post
         v-for="post in allPosts"
         :key="post"
-        :post="post"
-        @update-timeline="getAllPosts"
+        :data-id="post._id"
+        ref="postChild"
+        v-bind:post="post"
+        v-on:delete="deletePost"
       />
     </div>
   </div>
@@ -51,6 +58,9 @@
       Post,
     },
     methods: {
+      deletePost(post) {
+        console.log(post);
+      },
       logout() {
         localStorage.removeItem('token');
         localStorage.removeItem('userId');
@@ -72,52 +82,55 @@
             error;
           });
       },
-      consoleLofFile() {
-        console.log(document.getElementById('file').files[0]);
-      },
       sendNewPost() {
+        // fetch('http://localhost:3000/api/posts', {
+        //   method: 'POST',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({
+        //     text: this.text,
+        //     imageUrl: 'une url d image',
+        //     userId: this.userId,
+        //   }),
+        // })
+        //   .then((res) => {
+        //     res.json();
+        //     this.$refs.postChild.getAllPosts();
+        //   })
+        //   .catch((error) => {
+        //     error;
+        //   });
+
+        const formData = new FormData();
+        const file = document.getElementById('file').files[0];
+        const userId = localStorage.getItem('userId');
+        const text = this.text;
+
+        formData.append('text', text);
+        formData.append('image', file);
+        formData.append('userId', userId);
+
+        console.log(file, text, userId);
+        console.log(formData);
+
         fetch('http://localhost:3000/api/posts', {
           method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            text: this.text,
-            imageUrl: '../assets/random_img.jpg',
-            userId: this.userId,
-          }),
+          body: formData,
         })
-          .then((res) => {
-            res.json();
-            this.getAllPosts();
+          .then((res) => res.json())
+          .then(() => {
+            console.log('Post enregistré');
+            this.$refs.postChild.getAllPosts();
           })
-          .catch((error) => {
-            error;
-          });
-
-        // const formData = new FormData();
-        // const file = document.getElementById('file').files[0];
-        // const userId = localStorage.getItem('userId');
-
-        // formData.append('text', this.text);
-        // formData.append('imageUrl', file);
-        // formData.append('userId', userId);
-
-        // fetch('https://localhost:3000/api/posts', {
-        //   method: 'POST',
-
-        //   body: formData,
-        // })
-        //   .then((res) => res.json())
-        //   .then(() => {
-        //     console.log('Post enregistré');
-        //     this.getAllPosts();
-        //   })
-        //   .catch((err) => console.log(err))};
+          .catch((err) => console.log(err));
       },
     },
     beforeMount() {
+      if (!localStorage.getItem('userId') && !localStorage.getItem('token')) {
+        this.$router.push('/');
+      }
       this.getAllPosts();
     },
   };
