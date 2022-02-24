@@ -35,7 +35,8 @@
         :data-id="post._id"
         ref="postChild"
         v-bind:post="post"
-        v-on:delete="deletePost"
+        @delete="deletePost"
+        @update="updatePost"
       />
     </div>
   </div>
@@ -59,7 +60,43 @@
     },
     methods: {
       deletePost(post) {
-        console.log(post);
+        const token = localStorage.getItem('token');
+        fetch(`http://localhost:3000/api/posts/${post._id}`, {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => {
+            res.json();
+            this.getAllPosts();
+          })
+          .catch((error) => {
+            error;
+          });
+      },
+      updatePost(post) {
+        const token = localStorage.getItem('token');
+        fetch(`http://localhost:3000/api/posts/${post._id}`, {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            text: post.text,
+          }),
+        })
+          .then((res) => {
+            res.json();
+            this.getAllPosts();
+          })
+          .catch((error) => {
+            error;
+          });
       },
       logout() {
         localStorage.removeItem('token');
@@ -83,33 +120,13 @@
           });
       },
       sendNewPost() {
-        // fetch('http://localhost:3000/api/posts', {
-        //   method: 'POST',
-        //   headers: {
-        //     Accept: 'application/json',
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({
-        //     text: this.text,
-        //     imageUrl: 'une url d image',
-        //     userId: this.userId,
-        //   }),
-        // })
-        //   .then((res) => {
-        //     res.json();
-        //     this.$refs.postChild.getAllPosts();
-        //   })
-        //   .catch((error) => {
-        //     error;
-        //   });
-
         const formData = new FormData();
-        const file = document.getElementById('file').files[0];
+        const file = document.getElementById('file');
         const userId = localStorage.getItem('userId');
         const text = this.text;
 
         formData.append('text', text);
-        formData.append('image', file);
+        formData.append('image', file.files[0]);
         formData.append('userId', userId);
 
         console.log(file, text, userId);
@@ -122,7 +139,8 @@
           .then((res) => res.json())
           .then(() => {
             console.log('Post enregistré');
-            this.$refs.postChild.getAllPosts();
+            file.value = '';
+            this.getAllPosts();
           })
           .catch((err) => console.log(err));
       },
@@ -186,6 +204,7 @@
     border-radius: 10px;
     border-style: none;
     margin-bottom: 10px;
+    min-width: 450px;
   }
 
   .new-post-btns {

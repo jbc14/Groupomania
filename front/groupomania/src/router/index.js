@@ -19,6 +19,7 @@ const routes = [
     path: '/posts',
     name: 'Posts',
     component: Posts,
+    // beforeEnter: ()=>{}
   },
 ];
 

@@ -2,9 +2,9 @@
   <div>
     <div class="timeline-post">
       <div class="timeline-post-content">
-        <img :src="post.imageUrl" />
+        <img v-if="post.imageUrl" :src="post.imageUrl" />
         <p v-if="!updateMode">{{ post.text }}</p>
-        <input v-else type="text" v-model="post.text" />
+        <input v-else id="modified-text" type="text" v-model="post.text" />
       </div>
       <div class="timeline-post-info">
         <div class="likes">
@@ -12,15 +12,22 @@
           <img src="../assets/dislike.png" alt="" srcset="" />
         </div>
         <button
-          v-if="isUserAllowed(post)"
-          @click="updatePost()"
-          id="update-post"
+          v-if="isUserAllowed(post) && !updateMode"
+          @click="modify(post)"
+          id="modify-post"
         >
           Modifier
         </button>
         <button
+          v-if="isUserAllowed(post) && updateMode"
+          @click="update(post)"
+          id="update-post"
+        >
+          Enregistrer
+        </button>
+        <button
           v-if="isUserAllowed(post)"
-          @click="deletePost(post)"
+          v-on:click="deleteThisPost(post)"
           class="delete-post-btn"
         >
           Supprimer
@@ -46,49 +53,15 @@
       post: {},
     },
     methods: {
-      deletePost(post) {
-        this.$emit('delete', post);
-        return;
-        const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/${post._id}`, {
-          method: 'DELETE',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((res) => {
-            res.json();
-            this.getAllPosts();
-          })
-          .catch((error) => {
-            error;
-          });
+      deleteThisPost() {
+        this.$emit('delete', this.post);
       },
-      updatePost(post) {
+      modify() {
         this.updateMode = !this.updateMode;
-        return;
-        const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/${post._id}`, {
-          method: 'PUT',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            text: 'NOUVEAU POST MODIFIE ENCORE UNE FOIS',
-            imageUrl: 'encore une nouvelle url',
-          }),
-        })
-          .then((res) => {
-            res.json();
-            this.getAllPosts();
-          })
-          .catch((error) => {
-            error;
-          });
+      },
+      update() {
+        this.$emit('update', this.post);
+        this.updateMode = !this.updateMode;
       },
       isUserAllowed(post) {
         if (post.createurId == localStorage.getItem('userId')) {
@@ -105,6 +78,7 @@
     width: 100%;
     height: auto;
     margin-bottom: 50px;
+    min-width: 450px;
   }
 
   .timeline-post-content {
@@ -116,7 +90,7 @@
   }
 
   .timeline-post img {
-    width: 100px;
+    width: 200px;
     height: auto;
   }
 

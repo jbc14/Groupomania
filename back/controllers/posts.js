@@ -32,7 +32,6 @@ exports.updatePost = (req, res, next) => {
         Post.update(
           {
             text: req.body.text,
-            imageUrl: req.body.imageUrl,
           },
           { returning: true, where: { _id: req.params.id } }
         ).then(
@@ -66,6 +65,17 @@ exports.updatePost = (req, res, next) => {
 };
 
 exports.deletePost = (req, res, next) => {
+  Post.findOne({ where: { _id: req.params.id } }).then((post) => {
+    if (post.imageUrl) {
+      const filename = post.imageUrl.split('/images/')[1];
+      fs.unlink(`images/${filename}`, (err) => {
+        if (err) throw err;
+        console.log('Image was deleted');
+      });
+    } else {
+      console.log('Post has no image to delete');
+    }
+  });
   Post.findOne({ where: { _id: req.params.id } })
     .then((post) => {
       if (!post) {
@@ -101,10 +111,6 @@ exports.deletePost = (req, res, next) => {
   //   .then(() => res.status(200).json({ message: 'Post Supprimé !' }))
   //   .catch((error) => res.status(404).json({ error }));
 
-  // Post.findOne({ _id: req.params.id })
-  //   .then((post) => {
-  //     const filename = post.imageUrl.split('/images/')[1];
-  //     fs.unlink(`images/${filename}`, () => {
   //       Post.findOne({ _id: req.params.id }).then((post) => {
   //         if (!post) {
   //           res.status(404).json({
@@ -187,7 +193,6 @@ exports.like = (req, res) => {
       res.status(400).json({ error: error });
     });
 };
-
 
 // ne pas pouvoir accéder à post sans login
 //

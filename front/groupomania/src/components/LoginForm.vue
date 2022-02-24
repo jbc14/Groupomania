@@ -7,6 +7,7 @@
         v-model="password"
         type="password"
         placeholder="Mot de passe"
+        v-on:keyup.enter="logIn"
       />
       <button @click="showPassword()" id="show-password">
         <img id="show-password-icon" src="../assets/open_eye.png" />
