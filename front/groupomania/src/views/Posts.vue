@@ -5,15 +5,26 @@
       <img src="../assets/logout.png" alt="" srcset="" />
     </div>
     <form class="new-post-container">
-      <input
-        placeholder="Quoi de neuf aujourd'hui ?"
-        type="text"
-        id="new-post"
-        v-model="text"
-      />
+      <div class="new-post-inputs">
+        <div class="image-preview" id="imagePreview">
+          <img
+            class="image-preview__image"
+            id="imagePreviewImage"
+            src=""
+            alt="Image Preview"
+          />
+        </div>
+        <input
+          placeholder="Quoi de neuf aujourd'hui ?"
+          type="text"
+          id="new-post"
+          v-model="text"
+        />
+      </div>
       <div class="new-post-btns">
         <label for="file" class="label-file">Choisir une image</label>
         <input
+          @change="previewImage"
           id="file"
           type="file"
           class="add-image-btn"
@@ -59,6 +70,22 @@
       Post,
     },
     methods: {
+      previewImage() {
+        const inpFile = document.getElementById('file').files[0];
+        const imagePreview = document.getElementById('imagePreviewImage');
+
+        if (inpFile) {
+          const reader = new FileReader();
+          imagePreview.style.display = 'block';
+          reader.addEventListener('load', () => {
+            imagePreview.setAttribute('src', reader.result);
+          });
+
+          reader.readAsDataURL(inpFile);
+        } else {
+          imagePreview.style.display = 'none';
+        }
+      },
       deletePost(post) {
         const token = localStorage.getItem('token');
         fetch(`http://localhost:3000/api/posts/${post._id}`, {
@@ -197,6 +224,29 @@
     align-items: center;
     row-gap: 10px;
   }
+  .new-post-inputs {
+    display: flex;
+    flex-direction: row;
+    column-gap: 20px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 430px;
+    width: 80%;
+  }
+  .image-preview {
+    width: 120px;
+    min-height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+  }
+
+  .image-preview__image {
+    display: none;
+    width: 100%;
+  }
 
   #new-post {
     width: 80%;
@@ -204,7 +254,6 @@
     border-radius: 10px;
     border-style: none;
     margin-bottom: 10px;
-    min-width: 450px;
   }
 
   .new-post-btns {
