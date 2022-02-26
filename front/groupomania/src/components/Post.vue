@@ -1,41 +1,50 @@
 <template>
-  <div>
-    <div class="timeline-post">
-      <div class="timeline-post-content">
-        <img v-if="post.imageUrl" :src="post.imageUrl" />
-        <p v-if="!updateMode">{{ post.text }}</p>
-        <input v-else id="modified-text" type="text" v-model="post.text" />
+  <div class="timeline-post">
+    <div class="timeline-post-content">
+      <img v-if="post.imageUrl" :src="post.imageUrl" />
+      <p class="post-text" v-if="!updateMode">{{ post.text }}</p>
+      <input v-else id="modified-text" type="text" v-model="post.text" />
+    </div>
+    <div class="timeline-post-info">
+      <div class="likes">
+        <img src="../assets/like.png" alt="" srcset="" />
+        <img src="../assets/dislike.png" alt="" srcset="" />
       </div>
-      <div class="timeline-post-info">
-        <div class="likes">
-          <img src="../assets/like.png" alt="" srcset="" />
-          <img src="../assets/dislike.png" alt="" srcset="" />
-        </div>
-        <button
-          v-if="isUserAllowed(post) && !updateMode"
-          @click="modify(post)"
-          id="modify-post"
-        >
-          Modifier
-        </button>
-        <button
-          v-if="isUserAllowed(post) && updateMode"
-          @click="update(post)"
-          id="update-post"
-        >
-          Enregistrer
-        </button>
-        <button
-          v-if="isUserAllowed(post)"
-          v-on:click="deleteThisPost(post)"
-          class="delete-post-btn"
-        >
-          Supprimer
-        </button>
-        <div class="post-user-info">
-          <p>Posté par {{ post.createur.pseudo }}</p>
-          <img class="timeline-post-info-pp" src="../assets/random_user.webp" />
-        </div>
+      <button
+        v-if="isUserAllowed(post) && !updateMode"
+        @click="modify(post)"
+        id="modify-post"
+      >
+        <span class="button-text">Modifier</span>
+        <span class="material-icons"> edit </span>
+      </button>
+      <button
+        v-if="isUserAllowed(post) && updateMode"
+        @click="update(post)"
+        id="update-post"
+      >
+        <span class="button-text">Enregistrer</span>
+        <span class="material-icons"> save </span>
+      </button>
+      <button
+        v-if="isUserAllowed(post) && !updateMode"
+        v-on:click="deleteThisPost(post)"
+        class="delete-post-btn"
+      >
+        <span class="button-text">Supprimer</span>
+        <span class="material-icons"> delete </span>
+      </button>
+      <button
+        v-if="isUserAllowed(post) && updateMode"
+        v-on:click="modify(post)"
+        class="cancel-post-btn"
+      >
+        <span class="button-text">Annuler</span>
+        <span class="material-icons"> cancel </span>
+      </button>
+      <div class="post-user-info">
+        <p>Posté par {{ post.createur.pseudo }}</p>
+        <img class="timeline-post-info-pp" src="../assets/random_user.webp" />
       </div>
     </div>
   </div>
@@ -75,10 +84,10 @@
 
 <style scoped>
   .timeline-post {
-    width: 100%;
+    width: 65%;
     height: auto;
     margin-bottom: 50px;
-    min-width: 450px;
+    min-width: 250px;
   }
 
   .timeline-post-content {
@@ -87,11 +96,25 @@
     display: flex;
     column-gap: 10px;
     border-radius: 10px;
+    word-wrap: break-word;
+  }
+
+  .post-text {
+    overflow: auto;
   }
 
   .timeline-post img {
     width: 150px;
     height: auto;
+    border-radius: 10px;
+  }
+
+  #modified-text {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border-style: none;
+    margin-bottom: 10px;
   }
 
   .timeline-post-info {
@@ -139,5 +162,36 @@
     border-radius: 15px;
     border-style: none;
     cursor: pointer;
+  }
+
+  .material-icons {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .timeline-post {
+      width: 90%;
+    }
+
+    .timeline-post-content img {
+      width: 100px;
+      height: auto;
+    }
+    button {
+      margin-top: 5px;
+      background-color: #fd2d01;
+      color: white;
+      width: 50px;
+      height: 25px;
+      border-radius: 15px;
+      border-style: none;
+      cursor: pointer;
+    }
+    .material-icons {
+      display: block;
+    }
+    .button-text {
+      display: none;
+    }
   }
 </style>

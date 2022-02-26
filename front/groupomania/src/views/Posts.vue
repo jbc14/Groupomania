@@ -22,7 +22,6 @@
         />
       </div>
       <div class="new-post-btns">
-        <label for="file" class="label-file">Choisir une image</label>
         <input
           @change="previewImage"
           id="file"
@@ -30,12 +29,17 @@
           class="add-image-btn"
           accept="image/png, image/gif, image/jpeg, image/jpeg"
         />
+        <button @click="inputClick" type="button">
+          <span class="button-text">Ajouter une image</span>
+          <span class="material-icons"> image </span>
+        </button>
         <button
           type="submit"
           @click.prevent="sendNewPost()"
           class="send-new-post"
         >
-          Poster
+          <span class="button-text">Poster</span>
+          <span class="material-icons"> send </span>
         </button>
       </div>
     </form>
@@ -70,6 +74,9 @@
       Post,
     },
     methods: {
+      inputClick() {
+        document.getElementById('file').click();
+      },
       previewImage() {
         const inpFile = document.getElementById('file').files[0];
         const imagePreview = document.getElementById('imagePreviewImage');
@@ -77,6 +84,7 @@
         if (inpFile) {
           const reader = new FileReader();
           imagePreview.style.display = 'block';
+
           reader.addEventListener('load', () => {
             imagePreview.setAttribute('src', reader.result);
           });
@@ -168,6 +176,7 @@
             console.log('Post enregistré');
             file.value = '';
             this.getAllPosts();
+            this.previewImage();
           })
           .catch((err) => console.log(err));
       },
@@ -185,6 +194,7 @@
   .posts {
     background-color: #ffd7d7;
     padding: 20px;
+    padding-top: 40px;
     width: 80%;
     border-radius: 20px;
     margin-left: auto;
@@ -194,12 +204,19 @@
 
   .logout {
     position: absolute;
-    top: -130px;
-    right: -60px;
+    top: 0px;
+    right: 0;
     display: flex;
     justify-content: center;
     align-content: center;
     column-gap: 5px;
+    cursor: pointer;
+    background-color: #fd2d01;
+    color: white;
+    width: 150px;
+    height: 25px;
+    border-radius: 0 15px 0 15px;
+    border-style: none;
     cursor: pointer;
   }
 
@@ -231,7 +248,7 @@
     background-color: white;
     border-radius: 10px;
     padding: 10px;
-    min-width: 430px;
+    min-width: 250px;
     width: 80%;
   }
   .image-preview {
@@ -254,6 +271,8 @@
     border-radius: 10px;
     border-style: none;
     margin-bottom: 10px;
+    overflow: auto;
+    word-wrap: auto;
   }
 
   .new-post-btns {
@@ -261,9 +280,7 @@
     column-gap: 100px;
   }
 
-  button,
-  .label-file,
-  .logout {
+  button {
     background-color: #fd2d01;
     color: white;
     width: 150px;
@@ -283,5 +300,34 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .material-icons {
+    display: none;
+  }
+  @media (max-width: 700px) {
+    .new-post-container {
+      width: 100%;
+    }
+    .new-post-inputs {
+      width: 90%;
+    }
+    .posts {
+      width: auto;
+    }
+    .new-post-btns {
+      display: flex;
+      column-gap: 20px;
+    }
+    .material-icons {
+      display: block;
+    }
+    .button-text {
+      display: none;
+    }
+    button {
+      width: 60px;
+      height: 25px;
+    }
   }
 </style>
