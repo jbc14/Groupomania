@@ -4,6 +4,13 @@
       <input type="button" value="Se déconnecter" />
       <img src="../assets/logout.png" alt="" srcset="" />
     </div>
+    <input
+      @click="deleteAccount()"
+      type="button"
+      value="Supprimer mon compte"
+      class="delete-account"
+      id="deleteAccount"
+    />
     <form class="new-post-container">
       <div class="new-post-inputs">
         <div class="image-preview" id="imagePreview">
@@ -48,7 +55,6 @@
         v-for="post in allPosts"
         :key="post"
         :data-id="post._id"
-        ref="postChild"
         v-bind:post="post"
         @delete="deletePost"
         @update="updatePost"
@@ -74,6 +80,27 @@
       Post,
     },
     methods: {
+      deleteAccount() {
+        fetch(`http://localhost:3000/api/auth/delete`, {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId: localStorage.getItem('userId'),
+          }),
+        })
+          .then((res) => {
+            res.json();
+            localStorage.removeItem('userId');
+            localStorage.removeItem('token');
+            this.$router.push('/');
+          })
+          .catch((error) => {
+            error;
+          });
+      },
       inputClick() {
         document.getElementById('file').click();
       },
@@ -182,7 +209,11 @@
       },
     },
     beforeMount() {
-      if (!localStorage.getItem('userId') && !localStorage.getItem('token')) {
+      if (
+        (!localStorage.getItem('userId') && !localStorage.getItem('token')) ||
+        (localStorage.getItem('userId') == 'undefined' &&
+          localStorage.getItem('token') == 'undefined')
+      ) {
         this.$router.push('/');
       }
       this.getAllPosts();
@@ -216,6 +247,24 @@
     width: 150px;
     height: 25px;
     border-radius: 0 15px 0 15px;
+    border-style: none;
+    cursor: pointer;
+  }
+
+  .delete-account {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    column-gap: 5px;
+    cursor: pointer;
+    background-color: #fd2d01;
+    color: white;
+    width: 150px;
+    height: 25px;
+    border-radius: 15px 0 15px 0;
     border-style: none;
     cursor: pointer;
   }
