@@ -23,7 +23,7 @@ Les tables users et posts devraient se créer automatiquement lors du démarrage
 
 ## Backend
 
-Ouvrir le dossier Backend dans le terminal de votre éditeur puis exécuter la commande:
+Ouvrir le dossier back dans le terminal de votre éditeur puis exécuter la commande:
 
     npm install
 
@@ -33,7 +33,7 @@ puis
 
 ## Frontend
 
-Ouvrir le dossier Frontend, puis le dossier groupomania dans le terminal de votre éditeur puis exécuter la commande:
+Ouvrir le dossier front, puis le dossier groupomania dans le terminal de votre éditeur puis exécuter la commande:
 
     npm install
 
