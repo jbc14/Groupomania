@@ -103,7 +103,7 @@
     overflow: auto;
   }
 
-  .timeline-post img {
+  .timeline-post-content img {
     width: 150px;
     height: auto;
     border-radius: 10px;

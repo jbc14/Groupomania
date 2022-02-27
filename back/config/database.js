@@ -1,9 +1,15 @@
 const { Sequelize } = require('sequelize');
+require('dotenv').config();
 
-const sequelize = new Sequelize('groupomania', 'root', 'jbc143318', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USERNAME,
+  process.env.DB_PASSWORD,
+  {
+    host: 'localhost',
+    dialect: 'mysql',
+  }
+);
 
 try {
   sequelize.authenticate();

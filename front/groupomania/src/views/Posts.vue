@@ -80,91 +80,6 @@
       Post,
     },
     methods: {
-      deleteAccount() {
-        fetch(`http://localhost:3000/api/auth/delete`, {
-          method: 'DELETE',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: localStorage.getItem('userId'),
-          }),
-        })
-          .then((res) => {
-            res.json();
-            localStorage.removeItem('userId');
-            localStorage.removeItem('token');
-            this.$router.push('/');
-          })
-          .catch((error) => {
-            error;
-          });
-      },
-      inputClick() {
-        document.getElementById('file').click();
-      },
-      previewImage() {
-        const inpFile = document.getElementById('file').files[0];
-        const imagePreview = document.getElementById('imagePreviewImage');
-
-        if (inpFile) {
-          const reader = new FileReader();
-          imagePreview.style.display = 'block';
-
-          reader.addEventListener('load', () => {
-            imagePreview.setAttribute('src', reader.result);
-          });
-
-          reader.readAsDataURL(inpFile);
-        } else {
-          imagePreview.style.display = 'none';
-        }
-      },
-      deletePost(post) {
-        const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/${post._id}`, {
-          method: 'DELETE',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-          .then((res) => {
-            res.json();
-            this.getAllPosts();
-          })
-          .catch((error) => {
-            error;
-          });
-      },
-      updatePost(post) {
-        const token = localStorage.getItem('token');
-        fetch(`http://localhost:3000/api/posts/${post._id}`, {
-          method: 'PUT',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            text: post.text,
-          }),
-        })
-          .then((res) => {
-            res.json();
-            this.getAllPosts();
-          })
-          .catch((error) => {
-            error;
-          });
-      },
-      logout() {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        this.$router.push('/');
-      },
       getAllPosts() {
         fetch('http://localhost:3000/api/posts', {
           method: 'GET',
@@ -191,9 +106,6 @@
         formData.append('image', file.files[0]);
         formData.append('userId', userId);
 
-        console.log(file, text, userId);
-        console.log(formData);
-
         fetch('http://localhost:3000/api/posts', {
           method: 'POST',
           body: formData,
@@ -206,6 +118,103 @@
             this.previewImage();
           })
           .catch((err) => console.log(err));
+      },
+      updatePost(post) {
+        const token = localStorage.getItem('token');
+        fetch(`http://localhost:3000/api/posts/${post._id}`, {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            text: post.text,
+          }),
+        })
+          .then((res) => {
+            res.json();
+            this.getAllPosts();
+          })
+          .catch((error) => {
+            error;
+          });
+      },
+      deletePost(post) {
+        let answer = confirm('Etes-vous sûr(e) de vouloir supprimer ce post ?');
+        if (answer) {
+          const token = localStorage.getItem('token');
+          fetch(`http://localhost:3000/api/posts/${post._id}`, {
+            method: 'DELETE',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((res) => {
+              res.json();
+              this.getAllPosts();
+            })
+            .catch((error) => {
+              error;
+            });
+        } else {
+          this.getAllPosts();
+        }
+      },
+      inputClick() {
+        document.getElementById('file').click();
+      },
+      previewImage() {
+        const inpFile = document.getElementById('file').files[0];
+        const imagePreview = document.getElementById('imagePreviewImage');
+
+        if (inpFile) {
+          const reader = new FileReader();
+          imagePreview.style.display = 'block';
+
+          reader.addEventListener('load', () => {
+            imagePreview.setAttribute('src', reader.result);
+          });
+
+          reader.readAsDataURL(inpFile);
+        } else {
+          imagePreview.style.display = 'none';
+        }
+      },
+      deleteAccount() {
+        let answer = confirm(
+          'Etes-vous sûr(e) de vouloir supprimer votre compte ?'
+        );
+        if (answer) {
+          fetch(`http://localhost:3000/api/auth/delete`, {
+            method: 'DELETE',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              userId: localStorage.getItem('userId'),
+            }),
+          })
+            .then((res) => {
+              res.json();
+              localStorage.removeItem('userId');
+              localStorage.removeItem('token');
+              this.$router.push('/');
+            })
+            .catch((error) => {
+              error;
+            });
+        } else {
+          this.getAllPosts();
+        }
+      },
+      logout() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+        this.$router.push('/');
       },
     },
     beforeMount() {
