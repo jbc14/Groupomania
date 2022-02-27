@@ -40,9 +40,10 @@ Pour s'inscrire sur le réseau social Groupomania, il vous faut renseigner :
 - Un pseudo
 - Une adresse mail
 - Un mot de passe
-  Vous êtes ensuite redirigé vers la page des posts.
-  Il est impossible de créer plusieurs comptes avec une même adresse mail.
-  Pour l'instant, le site étant encore en développement, aucune regex n'a été implémentée, afin de faciliter les tests du site.
+
+Vous êtes ensuite redirigé vers la page des posts.
+Il est impossible de créer plusieurs comptes avec une même adresse mail.
+Pour l'instant, le site étant encore en développement, aucune regex n'a été implémentée, afin de faciliter les tests du site.
 
 Pour vous connecter, il vous faut renseigner :
 
