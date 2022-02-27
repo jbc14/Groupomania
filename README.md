@@ -9,6 +9,18 @@ Ma stack pour ce projet:
 - Node, express
 - Mysql, sequelize
 
+## Base de données
+
+Créer une base de données Mysql, facilement avec Mysql Workbench par exemple.
+
+Connecter votre base de données mysql en créant un fichier .env dans le dossier back, et en renseignant les trois variables d'environnement suivantes :
+
+- DB_NAME
+- DB_USERNAME
+- DB_PASSWORD
+
+Les tables users et posts devraient se créer automatiquement lors du démarrage du serveur.
+
 ## Backend
 
 Ouvrir le dossier Backend dans le terminal de votre éditeur puis exécuter la commande:
