@@ -2,6 +2,8 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const Post = require('../models/Post');
+require('dotenv').config();
+const accessToken = process.env.ACCESS_TOKEN;
 
 exports.signup = (req, res, next) => {
   User.findOne({
@@ -22,7 +24,7 @@ exports.signup = (req, res, next) => {
               .then((user) =>
                 res.status(201).json({
                   userId: user._id,
-                  token: jwt.sign({ userId: user._id }, 'RANDOM_TOKEN', {
+                  token: jwt.sign({ userId: user._id }, `${accessToken}`, {
                     expiresIn: '24h',
                   }),
                 })
@@ -49,7 +51,7 @@ exports.login = (req, res, next) => {
         }
         return res.status(200).json({
           userId: user._id,
-          token: jwt.sign({ userId: user._id }, 'RANDOM_TOKEN', {
+          token: jwt.sign({ userId: user._id }, `${accessToken}`, {
             expiresIn: '24h',
           }),
         });

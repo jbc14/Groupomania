@@ -44,24 +44,6 @@ exports.updatePost = (req, res, next) => {
       }
     })
     .catch((error) => res.status(500).json({ error }));
-
-  // if (req.file) {
-  //   Post.findOne({ _id: req.params.id }).then((post) => {
-  //     const filename = post.imageUrl.split('/images/')[1];
-  //     fs.unlink(`images/${filename}`, (err) => {
-  //       if (err) throw err;
-  //       console.log('Image was deleted');
-  //     });
-  //   });
-  // }
-  // const postObject = req.file
-  //   ? {
-  //       ...JSON.parse(req.body.post),
-  //       imageUrl: `${req.protocol}://${req.get('host')}/images/${
-  //         req.file.filename
-  //       }`,
-  //     }
-  //   : { ...req.body };
 };
 
 exports.deletePost = (req, res, next) => {
@@ -193,6 +175,3 @@ exports.like = (req, res) => {
       res.status(400).json({ error: error });
     });
 };
-
-// ne pas pouvoir accéder à post sans login
-//

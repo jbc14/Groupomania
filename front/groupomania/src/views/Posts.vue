@@ -101,6 +101,7 @@
         const file = document.getElementById('file');
         const userId = localStorage.getItem('userId');
         const text = this.text;
+        const token = localStorage.getItem('token');
 
         formData.append('text', text);
         formData.append('image', file.files[0]);
@@ -108,6 +109,9 @@
 
         fetch('http://localhost:3000/api/posts', {
           method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           body: formData,
         })
           .then((res) => res.json())

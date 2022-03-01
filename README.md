@@ -13,13 +13,17 @@ Ma stack pour ce projet:
 
 Créer une base de données Mysql, facilement avec Mysql Workbench par exemple.
 
-Connecter votre base de données mysql en créant un fichier .env dans le dossier back, et en renseignant les trois variables d'environnement suivantes :
+Connecter votre base de données mysql en renommant le fichier .env.example en .env dans le dossier back, et en renseignant les trois variables d'environnement suivantes :
 
-- DB_NAME
-- DB_USERNAME
-- DB_PASSWORD
+- DB_NAME=nom de votre base de données mysql
+- DB_USERNAME=votre nom d'utilisateur mysql
+- DB_PASSWORD=votre mot de passe mysql
 
 Les tables users et posts devraient se créer automatiquement lors du démarrage du serveur.
+
+Renseigner également la quatrième variable d'environnement afin de sécuriser l'authentification:
+
+- ACCESS_TOKEN=une chaîne de caractères longue et complexe.
 
 ## Backend
 
