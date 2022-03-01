@@ -21,7 +21,9 @@ Connecter votre base de données mysql en renommant le fichier .env.example en .
 
 Les tables users et posts devraient se créer automatiquement lors du démarrage du serveur.
 
-Renseigner également la quatrième variable d'environnement afin de sécuriser l'authentification:
+## Token
+
+Renseigner également la quatrième variable d'environnement dans le fichier .env afin de sécuriser l'authentification:
 
 - ACCESS_TOKEN=une chaîne de caractères longue et complexe.
 
